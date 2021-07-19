@@ -7,7 +7,7 @@ var storeSchema = new Schema({
   address: { street: String, district: String, province: String },
 });
 
-storeSchema.virtual("address").get(function () {
+storeSchema.virtual("fullAddress").get(function () {
   return (
     this.address.street +
     ", " +

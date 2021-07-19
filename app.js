@@ -6,6 +6,7 @@ var logger = require("morgan");
 if (process.env.NODE_ENV !== "production") require("dotenv").config();
 
 var indexRouter = require("./routes/index");
+var storesRouter = require("./routes/stores");
 
 var app = express();
 
@@ -16,6 +17,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
+app.use("/stores", storesRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -29,8 +31,7 @@ app.use(function (err, req, res, next) {
   res.locals.error = req.app.get("env") === "development" ? err : {};
 
   // render the error page
-  res.status(err.status || 500);
-  res.render("error");
+  res.send("error " + err.status || 500);
 });
 
 module.exports = app;
