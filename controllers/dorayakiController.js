@@ -1,21 +1,86 @@
 var Dorayaki = require("../models/dorayaki");
+const { body, validationResult } = require("express-validator");
+
+const dorayakiValidation = [
+  body("flavor", "flavor must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("description", "description must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+];
 
 exports.getAllDorayaki = (req, res, next) => {
-  res.send("TODO endpoint to get all dorayaki");
+  Dorayaki.find({})
+    .then((result) => res.json(result))
+    .catch((error) => next(error));
 };
 
-exports.newDorayaki = (req, res, next) => {
-  res.send("TODO endpoint to post a new dorayaki");
-};
+exports.newDorayaki = [
+  ...dorayakiValidation,
+  (req, res, next) => {
+    // send errors if exist
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    Dorayaki({
+      flavor: req.body.flavor,
+      description: req.body.description,
+    })
+      .save()
+      .then((dorayaki) => {
+        res
+          .status(201)
+          .location("/dorayaki/" + dorayaki._id)
+          .end();
+      })
+      .catch((error) => {
+        next(error);
+      });
+  },
+];
 
 exports.getDorayaki = (req, res, next) => {
-  res.send("TODO endpoint to get specific dorayaki");
+  Dorayaki.findById(req.params.id)
+    .exec()
+    .then((dorayaki) =>
+      dorayaki ? res.status(200).send(dorayaki) : res.sendStatus(404)
+    )
+    .catch((error) => next(error));
 };
 
-exports.updateDorayaki = (req, res, next) => {
-  res.send("TODO endpoint to update specific dorayaki");
-};
+exports.updateDorayaki = [
+  ...dorayakiValidation,
+  (req, res, next) => {
+    // send errors if exist
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    Dorayaki.findByIdAndUpdate(req.params.id, {
+      flavor: req.body.flavor,
+      description: req.body.description,
+    })
+      .exec()
+      .then((dorayaki) => {
+        dorayaki ? res.sendStatus(204) : res.sendStatus(404);
+      })
+      .catch((error) => next(error));
+  },
+];
 
 exports.deleteDorayaki = (req, res, next) => {
-  res.send("TODO endpoint to delete specific dorayaki");
+  Dorayaki.findByIdAndDelete(req.params.id)
+    .exec()
+    .then((dorayaki) => {
+      dorayaki ? res.sendStatus(200) : res.sendStatus(404);
+    })
+    .catch((error) => next(error));
 };
