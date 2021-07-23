@@ -1,5 +1,4 @@
 var Store = require("../models/store");
-var storeStock = require("../models/storeStock");
 
 const { body, validationResult } = require("express-validator");
 
@@ -96,24 +95,4 @@ exports.deleteStore = (req, res, next) => {
       store ? res.sendStatus(200) : res.sendStatus(404);
     })
     .catch((error) => next(error));
-};
-
-exports.getAllStocks = (req, res, next) => {
-  res.send("TODO endpoint to get all stock of a specific store");
-};
-
-exports.newStock = (req, res, next) => {
-  res.send("TODO endpoint to add new dorayaki stock to a specific store");
-};
-
-exports.getStock = (req, res, next) => {
-  res.send("TODO endpoint to get specific stock of a store");
-};
-
-exports.updateStock = (req, res, next) => {
-  res.send("TODO endpoint to update specific stock of a store");
-};
-
-exports.deleteStock = (req, res, next) => {
-  res.send("TODO endpoint to delete specific stock of a store");
 };

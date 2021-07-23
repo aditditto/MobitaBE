@@ -10,6 +10,6 @@ router.get("/:id", dorayakiController.getDorayaki);
 
 router.delete("/:id", dorayakiController.deleteDorayaki);
 
-router.put("/:id", dorayakiController.updateDorayaki);
+router.patch("/:id", dorayakiController.updateDorayaki);
 
 module.exports = router;

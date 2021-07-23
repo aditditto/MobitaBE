@@ -12,7 +12,7 @@ var dorayakiRouter = require("./routes/dorayaki");
 var app = express();
 
 const mongoose = require("mongoose");
-const mongo = process.env.MONGODB_URI;
+const mongo = process.env.MONGODB_URI || "mongodb://mongo:27017";
 mongoose.connect(mongo, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));

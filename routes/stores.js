@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var storesController = require("../controllers/storesController");
+var stockController = require("../controllers/stockController");
 
 router.get("/", storesController.getAllStores);
 
@@ -12,14 +13,14 @@ router.delete("/:id", storesController.deleteStore);
 
 router.put("/:id", storesController.updateStore);
 
-router.get("/:id/stocks", storesController.getAllStocks);
+router.get("/:id/stocks", stockController.getStoreStocks);
 
-router.post("/:id/stocks", storesController.newStock);
+router.post("/:id/stocks", stockController.newStock);
 
-router.get("/:id/stocks/:stockID", storesController.getStock);
+router.get("/:id/stocks/:stockID", stockController.getStock);
 
-router.delete("/:id/stocks/:stockID", storesController.deleteStock);
+router.delete("/:id/stocks/:stockID", stockController.deleteStock);
 
-router.put("/:id/stocks/:stockID", storesController.updateStock);
+router.patch("/:id/stocks/:stockID", stockController.updateStock);
 
 module.exports = router;
