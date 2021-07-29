@@ -57,7 +57,7 @@ exports.newStock = [
       storeID: req.params.id,
       dorayakiID: dorayaki._id,
       flavor: dorayaki.flavor,
-      quantity: req.params.quantity,
+      quantity: req.body.quantity,
       description: dorayaki.description,
       imgUrl: dorayaki.imgUrl,
     })
