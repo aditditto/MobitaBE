@@ -90,11 +90,17 @@ exports.updateDorayaki = [
   },
 ];
 
-exports.deleteDorayaki = (req, res, next) => {
-  Dorayaki.findByIdAndDelete(req.params.id)
-    .exec()
-    .then((dorayaki) => {
-      dorayaki ? res.sendStatus(200) : res.sendStatus(404);
-    })
-    .catch((error) => next(error));
+exports.deleteDorayaki = async (req, res, next) => {
+  const dorayaki = await Dorayaki.findById(req.params.id).lean().exec();
+
+  if (!dorayaki) return res.sendStatus(404);
+
+  const imageID = dorayaki.imgUrl.split("/")[2];
+
+  await Promise.all([
+    Dorayaki.findByIdAndDelete(req.params.id),
+    Image.findByIdAndDelete(imageID),
+  ]);
+
+  res.sendStatus(200);
 };
