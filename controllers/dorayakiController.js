@@ -1,4 +1,9 @@
 var Dorayaki = require("../models/dorayaki");
+var Image = require("../models/image");
+var multer = require("multer");
+var fs = require("fs");
+var upload = multer({ dest: "uploads/" });
+
 const { body, validationResult } = require("express-validator");
 
 const dorayakiValidation = [
@@ -19,8 +24,9 @@ exports.getAllDorayaki = (req, res, next) => {
 };
 
 exports.newDorayaki = [
+  upload.single("image"),
   ...dorayakiValidation,
-  (req, res, next) => {
+  async (req, res, next) => {
     // send errors if exist
     const errors = validationResult(req);
 
@@ -28,20 +34,28 @@ exports.newDorayaki = [
       return res.status(400).json({ errors: errors.array() });
     }
 
-    Dorayaki({
-      flavor: req.body.flavor,
-      description: req.body.description,
-    })
-      .save()
-      .then((dorayaki) => {
-        res
-          .status(201)
-          .location("/dorayaki/" + dorayaki._id)
-          .end();
-      })
-      .catch((error) => {
-        next(error);
-      });
+    try {
+      const filepath = __dirname + "/../" + req.file.path;
+      const savedImage = await Image({
+        contentType: req.file.mimetype,
+        data: fs.readFileSync(filepath),
+      }).save();
+
+      const savedDorayaki = await Dorayaki({
+        flavor: req.body.flavor,
+        description: req.body.description,
+        imgUrl: `/mongoImg/${savedImage._id}`,
+      }).save();
+
+      fs.unlinkSync(filepath);
+
+      res
+        .status(201)
+        .location("/dorayaki/" + savedDorayaki._id)
+        .end();
+    } catch (error) {
+      next(error);
+    }
   },
 ];
 
@@ -76,11 +90,17 @@ exports.updateDorayaki = [
   },
 ];
 
-exports.deleteDorayaki = (req, res, next) => {
-  Dorayaki.findByIdAndDelete(req.params.id)
-    .exec()
-    .then((dorayaki) => {
-      dorayaki ? res.sendStatus(200) : res.sendStatus(404);
-    })
-    .catch((error) => next(error));
+exports.deleteDorayaki = async (req, res, next) => {
+  const dorayaki = await Dorayaki.findById(req.params.id).lean().exec();
+
+  if (!dorayaki) return res.sendStatus(404);
+
+  const imageID = dorayaki.imgUrl.split("/")[2];
+
+  await Promise.all([
+    Dorayaki.findByIdAndDelete(req.params.id),
+    Image.findByIdAndDelete(imageID),
+  ]);
+
+  res.sendStatus(200);
 };

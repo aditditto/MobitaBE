@@ -9,6 +9,7 @@ if (process.env.NODE_ENV !== "production") require("dotenv").config();
 var indexRouter = require("./routes/index");
 var storesRouter = require("./routes/stores");
 var dorayakiRouter = require("./routes/dorayaki");
+var imageRouter = require("./routes/image");
 
 var app = express();
 
@@ -38,6 +39,7 @@ app.options("*", cors());
 app.use("/", indexRouter);
 app.use("/stores", storesRouter);
 app.use("/dorayaki", dorayakiRouter);
+app.use("/mongoImg", imageRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

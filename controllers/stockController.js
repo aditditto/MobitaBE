@@ -59,6 +59,7 @@ exports.newStock = [
       flavor: dorayaki.flavor,
       quantity: req.params.quantity,
       description: dorayaki.description,
+      imgUrl: dorayaki.imgUrl,
     })
       .save()
       .then((stock) =>

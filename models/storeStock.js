@@ -8,6 +8,7 @@ var storeStockSchema = new Schema({
   quantity: { type: Number, default: 0 },
   flavor: { type: String, required: true },
   description: String,
+  imgUrl: String,
 });
 
 module.exports = mongoose.model("storeStock", storeStockSchema);
