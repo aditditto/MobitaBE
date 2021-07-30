@@ -23,7 +23,10 @@ db.once("open", function () {
 });
 
 const corsOptions = {
-  origin: process.env.NODE_ENV === "production" ? process.env.FE_URL : "*",
+  origin:
+    process.env.NODE_ENV === "production"
+      ? new RegExp(process.env.FE_URL)
+      : "*",
 };
 
 app.use(cors(corsOptions));
