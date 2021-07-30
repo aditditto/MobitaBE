@@ -16,7 +16,7 @@ sudo docker-compose up
 
 ### Store
 
-```json
+```
 {
     name: string,
     address: {
@@ -29,7 +29,7 @@ sudo docker-compose up
 
 ### Dorayaki
 
-```json
+```
 {
     flavor: string,
     description: string,
@@ -39,7 +39,7 @@ sudo docker-compose up
 
 ### storeStock
 
-```json
+```
 {
     storeID: ObjectID,
     dorayakiID: ObjectID,
@@ -54,7 +54,7 @@ The storeStock model stores some properties of the dorayaki it is referencing, t
 
 ### image
 
-```json
+```
 {
     contentType: String,
     data: Buffer
@@ -106,7 +106,7 @@ creates a new stock for the store with \_id == :id
 
 request body:
 
-```json
+```
 {
     dorayakiID: objectID,
     quantity: Number
@@ -129,7 +129,7 @@ sets the quantity of a stock with the corresponding stockID
 
 request body:
 
-```json
+```
 {
     quantity: Number
 }
@@ -170,7 +170,7 @@ updates dorayaki with given request body
 
 request body:
 
-```json
+```
 {
     flavor: string,
     description: string
