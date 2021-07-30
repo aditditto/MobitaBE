@@ -4,6 +4,14 @@ https://floating-gorge-16340.herokuapp.com/
 
 The backend REST API of a MERN stack app for managing store branches and their inventory.
 
+## Running locally
+
+to run this repo locally, make sure that you are in the root folder of this repo and then run
+
+```
+sudo docker-compose up
+```
+
 ## Object Models
 
 ### Store
