@@ -1,4 +1,5 @@
 var Store = require("../models/store");
+var Stock = require("../models/storeStock");
 
 const { body, validationResult } = require("express-validator");
 
@@ -92,7 +93,13 @@ exports.deleteStore = (req, res, next) => {
   Store.findByIdAndDelete(req.params.id)
     .exec()
     .then((store) => {
-      store ? res.sendStatus(200) : res.sendStatus(404);
+      // store ? res.sendStatus(200) : res.sendStatus(404);
+      if (!store) return res.sendStatus(404);
+
+      Stock.deleteMany({ storeID: store._id })
+        .exec()
+        .then(res.sendStatus(200))
+        .catch((error) => next(error));
     })
     .catch((error) => next(error));
 };
